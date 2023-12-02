@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:alpine
+    networks:
+      - healthier
+
+  user:
+    image: yourzinc/healthier-user:dev
+    container_name: user
+    env_file:
+      - .env
+    networks:
+      - healthier
+    environment:
+      - TZ=Asia/Seoul
+
+  nginx:
+    image: yourzinc/healthier-nginx:dev
+    restart: always
+    depends_on:
+      - user
+    networks:
+      - healthier
+    environment:
+      - TZ=Asia/Seoul
+
+networks:
+  healthier:
